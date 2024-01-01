@@ -1,0 +1,107 @@
+﻿@model ComapnyWebApp.Models.States
+
+@{
+    ViewData["Title"] = "States";
+    Layout = "~/Views/Shared/Admin_Layout.cshtml";
+}
+
+
+<script type="text/javascript">
+    function saveNewState() {
+        //var url = Url.Action("AddState","Admin");
+    }
+
+    function deletedState(stateId) {
+        debugger;
+        $('#hdnDeleteStateId').val(stateId);
+        $('#dvDeleteStateModal').modal('show')
+    }
+
+    function deleteConfirmState() { 
+    
+       // var url = @Url//.Action("ActionName","ControllerName",);
+        ///Ajax    
+    }
+</script>
+
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#dvAddStateModal">
+    Add New State
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="dvAddStateModal" tabindex="-1" aria-labelledby="StateModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="StateModalLabel">Add New State</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="addStateForm" asp-action="AddState" method="post">
+                <div class="modal-body">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label asp-for="StateName">State Name:</label>
+                            @Html.TextBoxFor(x => x.StateName, new{@class="form-control"})
+                            @Html.ValidationMessageFor(x => x.StateName)
+                        </div>
+                        <br />
+                    </div>
+                </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="Submit" onclick="saveNewState();" class="btn btn-primary">Submit</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.StateName)
+                </th>
+               
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var state in Model.AllStates)
+            {
+                <tr>
+                    <td>@state.StateName</td>
+                    <td>
+                        <a asp-action="EditState" asp-route-id="@state.StateId">Edit</a> |
+                        <a href="javascript:void(0)" onclick="deletedState('@state.StateId')">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody> 
+    </table>
+</div>
+
+<div class="modal" id="dvDeleteStateModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="StateModalLabel">Delete State</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>            
+                <div class="modal-body">
+                    <input type="hidden" id="hdnDeleteStateId"/>
+                    <span>Are You Sure Want To Delete?</span>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                    <button type="Submit" onclick="deleteConfirmState();" class="btn btn-primary">Yes</button>
+                </div>            
+        </div>
+    </div>
+</div>
+
+
+
+
+

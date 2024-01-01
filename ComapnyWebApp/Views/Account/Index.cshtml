@@ -47,8 +47,7 @@
                 <td>@employee.Gender</td>
                 <td>@employee.DOB</td>
                  <td>
-@*                     @Html.ActionLink("Edit", null,new{empCode= employee.EmployeeCode}) *@
-                    <a asp-action="Edit" asp-route-id="@employee.EmployeeCode">Edit</a> |
+                    @Html.ActionLink("Edit","Edit","Account",new{empCode= employee.EmployeeCode}) |
                     <a asp-action="Delete" asp-route-id="@employee.EmployeeCode">Delete</a>
                 </td> 
             </tr>

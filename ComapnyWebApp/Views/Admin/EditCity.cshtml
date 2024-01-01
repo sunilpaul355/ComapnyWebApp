@@ -1,0 +1,31 @@
+﻿@model ComapnyWebApp.Models.City
+
+@{
+    ViewData["Title"] = "Edit Cities";
+    Layout = "~/Views/Shared/Admin_Layout.cshtml";
+}
+
+<h1>Edit Cities</h1>
+
+<form asp-action="EditCity" method="post">
+
+
+    @Html.HiddenFor(x=>x.CityId)
+
+    <div class="form-group">
+        <label asp-for="CityName">Change City Name:</label><br />
+        <input asp-for="CityName" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="StateId">Select State Name:</label><br />
+        @{
+            var states = (List<States>)ViewBag.States;
+            states.Insert(0, new States { StateId = 0, StateName = "Select State" });
+        }
+        @Html.DropDownListFor(x=>x.StateId, new SelectList(states, "StateId", "StateName"), new{@class="form-control"})
+    </div>
+    <br />
+    <button type="submit" class="btn btn-primary">Save Changes</button>
+</form>
+
+<a asp-action="AddCity">Back to List</a>

@@ -17,7 +17,13 @@
         </dt>
         <dd>
             @Html.DisplayFor(model => model.EmployeeCode)
-        </dd>        
+        </dd> 
+        <dt>
+            @Html.DisplayNameFor(model => model.FirstName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.FirstName)
+        </dd>
     </dl>
 
     <form asp-action="DeleteConfirmed" asp-route-id="@Model.EmployeeCode" method="post">

@@ -7,9 +7,18 @@
 <h1>Edit Employee</h1>
 
 <form asp-action="Edit" method="post">
-    <input type="hidden" asp-for="Id" />
-   @* @Html.HiddenFor(x=>x.EmployeeCode) *@
-    <input type="hidden" asp-for="EmployeeCode" />
+
+    
+    @Html.HiddenFor(x=>x.Id)
+    @Html.HiddenFor(x=>x.DOB)
+    @Html.HiddenFor(x=>x.Mobile)
+    @Html.HiddenFor(x=>x.ConfirmPassword)
+    @Html.HiddenFor(x=>x.Password)
+    @Html.HiddenFor(x=>x.EmployeeCode)
+    @Html.HiddenFor(x=>x.Email)
+    @Html.HiddenFor(x=>x.Gender)
+
+
 
     <!-- Display other properties for editing -->
     

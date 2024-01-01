@@ -1,0 +1,109 @@
+﻿@model ComapnyWebApp.Models.City
+
+@{
+    ViewData["Title"] = "Cities";
+    Layout = "~/Views/Shared/Admin_Layout.cshtml";
+}
+
+<script type="text/javascript">
+    function deletedCity(Id) {
+        debugger;
+        $('#hdnDeleteCityId').val(Id);
+        $('#dvDeleteCityModal').modal('show')
+    }
+
+    function deletedConfirmCity() {
+
+    }
+</script>
+
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#dvAddCityModal">
+    Add New City
+</button>
+
+<div class="modal fade" id="dvAddCityModal" tabindex="-1" aria-labelledby="CityModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="CityModalLabel">Add New City</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="addCityForm" asp-action="AddCity" method="post">
+                <div class="modal-body">
+                    <div class="col-md-12">
+
+                        <div class="form-group">
+                            <label asp-for="CityName">City Name :</label>
+                            @Html.TextBoxFor(x => x.CityName)
+                            @* <input asp-for="DeptName" class="form-control"> *@
+                            @Html.ValidationMessageFor(x => x.CityName)
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="StateId">Select State :</label>
+                            @{
+                                var states = (List<States>)ViewBag.States;
+                                states.Insert(0, new States { StateId = 0, StateName = "Select State" });
+                            }
+                            @Html.DropDownListFor(x=>x.StateId, new SelectList(states, "StateId", "StateName"), new{@class="form-control"})
+
+                        </div>
+                        <br />
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="Submit" onclick="saveNewState();" class="btn btn-primary">Submit</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.CityName)
+
+                </th>
+                <th>
+                    <label>State Name</label>
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var city in Model.AllCities)
+            {
+                <tr>
+                    <td>@city.CityName</td>
+                    <td>@city.States.StateName</td>
+                    <td>
+                        <a asp-action="EditCity" asp-route-id="@city.CityId">Edit</a> |
+                        <a href="javascript:void(0)" onclick="deletedCity('@city.CityId')">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<div class="modal" id="dvDeleteCityModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="CityModalLabel">Delete City</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="hdnDeleteCityId" />
+                <span>Are You Sure Want To Delete?</span>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                <button type="Submit" onclick="deletedConfirmCity();" class="btn btn-primary">Yes</button>
+            </div>
+        </div>
+    </div>
+</div>

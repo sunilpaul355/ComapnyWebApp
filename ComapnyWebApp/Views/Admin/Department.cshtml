@@ -1,0 +1,199 @@
+﻿@model ComapnyWebApp.Models.Department
+
+@{
+    ViewData["Title"] = "Department";
+    Layout = "~/Views/Shared/Admin_Layout.cshtml";
+}
+
+<script type="text/javascript">
+    function saveNewState() {
+        //var url = Url.Action("AddState","Admin");
+    }
+
+    function deletedDepartment(Id) {
+        debugger;
+        $('#hdnDeleteDeptId').val(Id);
+        $('#dvDeleteDeptModal').modal('show')
+    }
+
+    function deleteConfirmDept() {
+        debugger;
+        var id = $('#hdnDeleteDeptId').val();
+        var url = '@Url.Action("DeleteDepartment","Admin")';
+        url = url + '?id=' + id;
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: JSON.stringify(id),
+            dataType: "json",
+            contentType: 'application/json; charset=utf-8',
+            success: function (response) {
+                if (response.status) {
+                    $('#spnTextMsg').show();
+                    $('#spnTextMsg').html(response.message);
+                    setInterval(function () {
+                        $('#spnTextMsg').hide();
+                        location.reload();
+                    }, 3000);
+                    $('#dvDeleteDeptModal').modal('hide')
+                } else {
+                    alert(response.message);
+                }
+            },
+            error: function () {
+                alert("Error occured!!")
+            }
+        });
+    }
+
+
+    function EditDept(Id, DeptName)
+    {
+        debugger; 
+        console.log(DeptName);
+        $('#Id').val(Id);
+        $('#DeptName').val(DeptName);
+        $('#dvEditDeptModal').modal('show');
+    }
+
+    function EditConfirmDept() {
+        debugger;
+        var id = $('#Id').val();
+        var url = '@Url.Action("EditDepartment", "Admin")';
+        var valdata = $("#editDepartmentForm").serialize();
+        valdata = valdata + '&Id=' + id;
+        $.ajax({
+            type: "POST",
+            url: url,
+            async: true,
+            dataType: "json",
+            data: valdata,
+            success: function (response) {
+                if (response.status) {
+                    $('#spnTextMsg').show();
+                    $('#spnTextMsg').html(response.message);
+                    setInterval(function () {
+                        $('#spnTextMsg').hide();
+                        location.reload();
+                    }, 3000);
+                    $('#dvEditDeptModal').modal('hide');
+                }
+                else {
+                    alert(response.message);
+                }
+            },
+            error: function () {
+                alert("Error occurred!!");
+            }
+        });
+    }
+</script>
+
+<div class="col-md-12 alert alert-success" id="spnTextMsg" style="display:none;"></div>
+
+<div class="col-md-12">
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#dvAddDepartmentModal">
+        Add New Department
+    </button>
+</div>
+
+
+<div class="modal fade" id="dvAddDepartmentModal" tabindex="-1" aria-labelledby="DepartmentModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="DepartmentModalLabel">Add New Department</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="addDepartmentForm">
+                
+                <div class="modal-body">
+                    <div class="col-md-12">
+                        <input type="hidden" id="Id" />
+                        <div class="form-group">
+                            <label asp-for="DeptName">Departmnet Name :</label>
+                            @Html.TextBoxFor(x => x.DeptName)
+                            @Html.ValidationMessageFor(x => x.DeptName)
+                        </div>
+                        <br />       
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" onclick="saveNewState();" class="btn btn-primary">Submit</button>
+                </div>            
+            </form>
+        </div>
+    </div>
+</div>
+
+<div>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>
+                    <label>Department Name: </label>
+                </th>
+                <th>
+                    <label>Modifications: </label>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var Dept in  Model.AllDepartment)
+            {
+                <tr>
+                    <td>@Dept.DeptName</td>                    
+                    <td>
+                        @* <a asp-action="EditDepartment" asp-route-id="@Dept.Id">Edit</a> *@
+                        <a href="javascript:void(0)" onclick="EditDept('@Dept.Id','@Dept.DeptName')">Edit</a>|
+                        <a href="javascript:void(0)" onclick="deletedDepartment('@Dept.Id')">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<div class="modal" id="dvDeleteDeptModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="DeptModalLabel">Delete Department</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="hdnDeleteDeptId" />
+                <span>Are You Sure Want To Delete?</span>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                <button type="Submit" onclick="deleteConfirmDept();" class="btn btn-primary">Yes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="dvEditDeptModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="EditDeptModalLabel">Edit Department</h5>
+            </div>
+            <form id="editDepartmentForm">
+                <input type="hidden" id="Id" />
+                <div class="form-group">
+                    <label asp-for="DeptName">Change Department Name:</label><br />
+                    @* <input asp-for="DeptName" class="form-control" id="DeptName" /> *@
+                    @Html.TextBoxFor(y => y.DeptName)
+                    @Html.ValidationMessageFor(y => y.DeptName)
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                    <button type="button" onclick="EditConfirmDept();" class="btn btn-primary">Yes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+

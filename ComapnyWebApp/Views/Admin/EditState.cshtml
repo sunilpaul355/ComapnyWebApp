@@ -1,0 +1,23 @@
+﻿@model ComapnyWebApp.Models.States
+
+@{
+    ViewData["Title"] = "Edit States";
+    Layout = "~/Views/Shared/Admin_Layout.cshtml";
+}
+
+<h1>Edit States</h1>
+
+<form asp-action="EditState" method="post">
+
+
+    @Html.HiddenFor(x=>x.StateId)
+
+    <div class="form-group">
+        <label asp-for="StateName">Change State Name:</label><br />
+        <input asp-for="StateName" class="form-control" />
+    </div>
+    <br />
+    <button type="submit" class="btn btn-primary">Save Changes</button>
+</form>
+
+<a asp-action="AddState">Back to List</a>

@@ -100,15 +100,15 @@ namespace ComapnyWebApp.Controllers
 
         // GET: Employees/Edit
         [HttpGet]
-        public IActionResult Edit(string? id)
+        public IActionResult Edit(string? empCode)
         {
-            if (string.IsNullOrEmpty(id))
+            if (string.IsNullOrEmpty(empCode))
             {
                 return NotFound();
             }
 
             //var employee = EmployeeData.GetEmployeeById(id);
-            var employee = _context.Employees.FirstOrDefault(e => e.EmployeeCode == id);
+            var employee = _context.Employees.FirstOrDefault(e => e.EmployeeCode == empCode);
 
             if (employee == null)
             {
@@ -121,24 +121,21 @@ namespace ComapnyWebApp.Controllers
         // POST: Employees/Edit
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(string id, [Bind("Id", "EmployeeCode", "FirstName", "LastName")] Employee employee)
-            {
-            if (id != employee.EmployeeCode)
-            {
-                return NotFound();
-            }
-
+        public IActionResult Edit(Employee employee)
+        {
+           
             try
             {
                 //EmployeeData.UpdateEmployee(employee);
-                _context.Update(employee);
+                _context.Employees.Update(employee);
                 _context.SaveChanges();
                 return RedirectToAction("Index");
             }
-               catch
+            catch (Exception ex)
             {
-                ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists see your system administrator.");
-                return View(employee);
+                throw ex;
+                //ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists see your system administrator.");
+                //return View(employee);
             }
         }
 
@@ -169,8 +166,6 @@ namespace ComapnyWebApp.Controllers
             {
                 return NotFound();
             }
-
-            //EmployeeData.DeleteEmployee(id);
 
             var employeeToRemove = _context.Employees.FirstOrDefault(e => e.EmployeeCode == id);
 
